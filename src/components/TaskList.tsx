@@ -16,30 +16,76 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+    //handleCreateNewTask: Deve ser possível adicionar uma nova task no estado de tasks, 
+    //com os campos id que deve ser gerado de forma aleatória, 
+    //title que deve ser um texto e isComplete que deve iniciar como false.
+
+    //Instrucoes para fazer primeiro criei uma variavel para armazenar as tasks antigas e 
+    //nao perder elas Apos isso criei uma nova taske que foi um objeto 
+    //Peguei o Titulo utilizando o NewtaskTitle
+    //
+    if (!newTaskTitle) return;
+
+    const oldTasks = tasks
+    const newTask = {
+      id: Math.random(),
+      title: newTaskTitle,
+      isComplete: false
+    }
+
+    setTasks([...oldTasks, newTask])
+    setNewTaskTitle('');
+
+
   }
 
+
   function handleToggleTaskCompletion(id: number) {
-    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID  
+    //Para alterar entre true ou false eu criei uma variavel que armazena as tasks 
+    //utilizei o metodo for each percorrendo todos os elementos desse meu array 
+    //arrow function apontando para uma condicao de que se o id da task for igual
+    // ao id passado por parametro no click do CheckBox ele verifica se o valor bolleano
+    //do atributo isComplete e verdadeiro se for verdadeiro  ele atribui o valor false
+    //caso ele nao seja verdadeiro e sim seja false 
+    //  ele atribui o valor de verdadeiro 
+    const allTasks = tasks
+    allTasks.forEach((task) => {
+      if (task.id === id) {
+        task.isComplete === true
+          ? (task.isComplete = false)
+          : (task.isComplete = true);
+      }
+    });
+    setTasks([...allTasks]);
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
+    // crio  uma constante e nela ja atribuo a minha variavel que  esta guardando
+    //  Minhas tasks utilizo o  metodo  filter nela 
+    // percorro todo o array com o metodo filter
+    // e eu faco um filtro para trazer todas as tasks que tenham o id 
+    //Diferente do id que me foi passado no clik por parametro
+    const filteredTasks = tasks.filter(task => task.id !== id);
+    setTasks([...filteredTasks]);
+
   }
 
   return (
     <section className="task-list container">
       <header>
         <h2>Minhas tasks</h2>
-
         <div className="input-group">
-          <input 
-            type="text" 
-            placeholder="Adicionar novo todo" 
+          <input
+            id="inputTitleId"
+            type="text"
+            placeholder="Adicionar novo todo"
             onChange={(e) => setNewTaskTitle(e.target.value)}
             value={newTaskTitle}
           />
           <button type="submit" data-testid="add-task-button" onClick={handleCreateNewTask}>
-            <FiCheckSquare size={16} color="#fff"/>
+            <FiCheckSquare size={16} color="#fff" />
           </button>
         </div>
       </header>
@@ -47,10 +93,10 @@ export function TaskList() {
       <main>
         <ul>
           {tasks.map(task => (
-            <li key={task.id}>
+            <li key={task.id} >
               <div className={task.isComplete ? 'completed' : ''} data-testid="task" >
                 <label className="checkbox-container">
-                  <input 
+                  <input
                     type="checkbox"
                     readOnly
                     checked={task.isComplete}
@@ -62,11 +108,11 @@ export function TaskList() {
               </div>
 
               <button type="button" data-testid="remove-task-button" onClick={() => handleRemoveTask(task.id)}>
-                <FiTrash size={16}/>
+                <FiTrash size={16} />
               </button>
             </li>
           ))}
-          
+
         </ul>
       </main>
     </section>
